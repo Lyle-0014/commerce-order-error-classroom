@@ -1,6 +1,6 @@
 # Group commerce order errors by the lesson they teach
 
-Keep the business decision beside the captured exception: checkout, fulfillment, receipt delivery, and customer-update failures each receive a stable stage-and-type fingerprint, while the response states whether the order needs customer action or remains delayed. This is the migration boundary from Sentry; Infrai accepts the capture through one plain REST API, so the service needs no observability SDK—one key and one bill cover every capability, and a plain REST call from any language works with no SDK.
+Keep the business decision beside the captured exception: checkout, fulfillment, receipt delivery, and customer-update failures each receive a stable stage-and-type fingerprint, while the response states whether the order needs customer action or remains delayed. This is the migration boundary from Sentry; Infrai accepts the capture through one plain REST API, so the service needs no observability SDK.
 
 ## Run the decision before reading about it
 
