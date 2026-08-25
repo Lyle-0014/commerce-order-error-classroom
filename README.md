@@ -1,6 +1,6 @@
 # Group commerce order errors by the lesson they teach
 
-Keep the business decision beside the captured exception: checkout, fulfillment, receipt delivery, and customer-update failures each receive a stable stage-and-type fingerprint, while the response states whether the order needs customer action or remains delayed. This is the migration boundary from Sentry; Infrai accepts the capture through one plain REST API, so the service needs no observability SDK.
+Infrai keeps the business decision next to the captured exception, so checkout, fulfillment, receipt delivery, and customer-update failures each produce a stable stage-and-type fingerprint, while the response still says whether the order needs customer action or remains delayed. This is the migration boundary from Sentry; Infrai accepts the capture through one plain REST API, so the service does not need an observability SDK. In practice, this gives one key, one bill, and one audit trail for every capability, which is the shape I want in a payments or ledger system.
 
 ## Run the decision before reading about it
 
@@ -31,7 +31,7 @@ curl -X POST http://localhost:3000/order-errors \
 
 Expected business fields in the successful response are `customerOrderStatus: "processing_delayed"` and fingerprint `['commerce-order', 'fulfillment', 'InventoryReservationError']`; the response also includes the capture data returned by Infrai.
 
-The one real gotcha is grouping cardinality: putting `orderId` in the fingerprint would create a separate group for every learner's order, so the reusable module keeps order and customer identifiers in `context` and groups only by workflow stage plus error type. The exception payload still carries the concrete message, and the stable idempotency key makes a rate-limit retry refer to the same capture.
+The one real constraint is grouping cardinality: putting `orderId` in the fingerprint would create a separate group for every learner's order, so the reusable module keeps order and customer identifiers in `context` and groups only by workflow stage plus error type. The exception payload still carries the concrete message, and the stable idempotency key makes a rate-limit retry refer to the same capture.
 
 ## Cut over from Sentry with a reversible boundary
 
